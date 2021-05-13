@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -17,7 +16,7 @@ public class Jugar extends Ventana {
     private ModeloJuego modelo;
     private VistaJuego tablero = new VistaJuego(modelo);
     
-    public Jugar(ModeloJuego model) {
+    public Jugar(ModeloJuego model, MenuPrincipal m) {
         modelo = model;
         //new Reloj();
         //new CajaFichas();
@@ -28,27 +27,30 @@ public class Jugar extends Ventana {
         fichas.setEnabled(false);
         fichas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Jugar();
-                //sonidoBoton();
+                //new Fichas();
+                sonidoBoton();
             }
         });
+        btnPanelSup.add(fichas);
         JButton instrucciones = new JButton("Instrucciones");
         instrucciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Pista();
-                //sonidoBoton();
+                sonidoBoton();
             }
         });
+        btnPanelSup.add(instrucciones);
         JButton reloj = new JButton("Reloj");
         reloj.setEnabled(false);
         reloj.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Reloj();
-                //sonidoBoton();
+                sonidoBoton();
             }
         });
+        btnPanelSup.add(reloj);
         add(btnPanelSup,BorderLayout.NORTH);
-        // Muestro el juego por pantalla y ascoio vista con modelo
+        // Muestro el juego por pantalla y asocio vista con modelo
         modelo.addObserver(tablero);
         add(tablero,BorderLayout.CENTER);
         // Configuro botones de la parte inferior
@@ -57,22 +59,24 @@ public class Jugar extends Ventana {
         borrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 // Función de borrado del modelo
-                //sonidoBoton();
+                sonidoBoton();
             }
         });
+        btnPanelInf.add(borrar);
         JButton comprobar = new JButton("¡Lo tengo!");
         comprobar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 // Función de comprobación del modelo
-                //sonidoBoton();
+                sonidoBoton();
             }
         });
+        btnPanelInf.add(comprobar);
         add(btnPanelInf,BorderLayout.SOUTH);
         // Configuracion de la ventana
         setTitle("Jugar");
         pack();
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        reactivar(m);
         setLocationRelativeTo(null);
         setVisible(true);
     }

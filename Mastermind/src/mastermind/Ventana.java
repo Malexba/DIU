@@ -15,10 +15,10 @@ import javax.swing.JFrame;
  */
 public class Ventana extends JFrame {
     
-    /*public void sonidoBoton() {
+    public void sonidoBoton() {
         Clip c = null;
         try{
-            URL soundURL = getClass().getClassLoader().getResource("/sounds/button.wav");
+            URL soundURL = getClass().getClassLoader().getResource("sounds/button.wav");
             Line.Info linfo = new Line.Info(Clip.class);
             Line line = AudioSystem.getLine(linfo);
             c = (Clip) line;
@@ -29,5 +29,13 @@ public class Ventana extends JFrame {
         }
         c.setMicrosecondPosition(0);
         c.start();
-    }*/
+    }
+    
+    public void reactivar(MenuPrincipal m) { // Función para reactivar los comandos del menú principal
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                m.rehabilitar();
+            }
+        });
+    }
 }

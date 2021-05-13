@@ -21,12 +21,14 @@ public class MenuPrincipal extends Ventana {
     private Clip sc;
     
     public MenuPrincipal() {
+        sonidoContinuo();
         // Creamos los botones y les asignamos acciones
         jugar = new JButton("Jugar");
+        MenuPrincipal self = this;
         jugar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                new Jugar(modelo);
-                //sonidoBoton();
+                new Jugar(modelo, self);
+                sonidoBoton();
                 deshabilitar();
             }
         });
@@ -34,7 +36,7 @@ public class MenuPrincipal extends Ventana {
         instrucciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Instrucciones();
-                //sonidoBoton();
+                sonidoBoton();
                 deshabilitar();
             }
         });
@@ -42,7 +44,7 @@ public class MenuPrincipal extends Ventana {
         resultados.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Resultados();
-                //sonidoBoton();
+                sonidoBoton();
                 deshabilitar();
             }
         });
@@ -50,7 +52,7 @@ public class MenuPrincipal extends Ventana {
         opciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Opciones(modelo);
-                //sonidoBoton();
+                sonidoBoton();
                 deshabilitar();
             }
         });
@@ -76,10 +78,17 @@ public class MenuPrincipal extends Ventana {
         opciones.setEnabled(false);
     }
     
-    /*public void sonidoContinuo(){
+    public void rehabilitar() {
+        jugar.setEnabled(true);
+        instrucciones.setEnabled(true);
+        resultados.setEnabled(true);
+        opciones.setEnabled(true);
+    }
+    
+    public void sonidoContinuo(){
         sc = null;
         try{
-            URL soundURL = getClass().getClassLoader().getResource("../sounds/bensound-enigmatic.mp3");
+            URL soundURL = getClass().getClassLoader().getResource("sounds/bensound-enigmatic.wav");
             Line.Info linfo = new Line.Info(Clip.class);
             Line line = AudioSystem.getLine(linfo);
             sc = (Clip) line;
@@ -99,5 +108,5 @@ public class MenuPrincipal extends Ventana {
     public void iniciarSonidoContinuo(){
         sc.loop(Clip.LOOP_CONTINUOUSLY);
         sc.start();
-    }*/
+    }
 }
