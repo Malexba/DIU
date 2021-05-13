@@ -15,6 +15,8 @@ import javax.swing.*;
  */
 public class MenuPrincipal extends Ventana {
     
+    private ModeloJuego modelo = new ModeloJuego();
+    
     private JButton jugar, instrucciones, resultados, opciones;
     private Clip sc;
     
@@ -23,8 +25,9 @@ public class MenuPrincipal extends Ventana {
         jugar = new JButton("Jugar");
         jugar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Jugar();
+                new Jugar(modelo);
                 //sonidoBoton();
+                deshabilitar();
             }
         });
         instrucciones = new JButton("¿Cómo se juega?");
@@ -32,6 +35,7 @@ public class MenuPrincipal extends Ventana {
             public void actionPerformed(ActionEvent e){
                 //new Instrucciones();
                 //sonidoBoton();
+                deshabilitar();
             }
         });
         resultados = new JButton("Resultados");
@@ -39,13 +43,15 @@ public class MenuPrincipal extends Ventana {
             public void actionPerformed(ActionEvent e){
                 //new Resultados();
                 //sonidoBoton();
+                deshabilitar();
             }
         });
         opciones = new JButton("Opciones");
         opciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Opciones();
+                //new Opciones(modelo);
                 //sonidoBoton();
+                deshabilitar();
             }
         });
         // Añadimos los botones a la ventana
@@ -61,6 +67,13 @@ public class MenuPrincipal extends Ventana {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+    
+    public void deshabilitar() {
+        jugar.setEnabled(false);
+        instrucciones.setEnabled(false);
+        resultados.setEnabled(false);
+        opciones.setEnabled(false);
     }
     
     /*public void sonidoContinuo(){
