@@ -19,9 +19,11 @@ public class MenuPrincipal extends Ventana {
     
     private JButton jugar, instrucciones, resultados, opciones;
     private Clip sc;
+    private boolean sonando;
     
     public MenuPrincipal() {
         sonidoContinuo();
+        sonando = true;
         // Creamos los botones y les asignamos acciones
         jugar = new JButton("Jugar");
         MenuPrincipal self = this;
@@ -51,7 +53,7 @@ public class MenuPrincipal extends Ventana {
         opciones = new JButton("Opciones");
         opciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Opciones(modelo);
+                new Opciones(modelo, self);
                 sonidoBoton();
                 deshabilitar();
             }
@@ -103,10 +105,16 @@ public class MenuPrincipal extends Ventana {
 
     public void pararSonido(){
         sc.stop();
+        sonando = false;
     }
 
     public void iniciarSonidoContinuo(){
         sc.loop(Clip.LOOP_CONTINUOUSLY);
         sc.start();
+        sonando = true;
+    }
+    
+    public boolean sonando() {
+        return sonando;
     }
 }
