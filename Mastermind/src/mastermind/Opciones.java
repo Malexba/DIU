@@ -9,6 +9,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerListModel;
 
 /**
@@ -24,16 +25,18 @@ public class Opciones extends Ventana {
         setLayout(new BorderLayout());
         // Configuro botones de la parte superior
         JPanel panelSup = new JPanel(new BorderLayout());
-        // Dificultades
+        // Selector de dificulad
         JPanel dificultad = new JPanel(new FlowLayout());
         JLabel nombreD = new JLabel("Dificultad:");
         dificultad.add(nombreD);
-        String[] dificultadesList = {"Normal","Fácil","Difícil"};
+        String[] dificultadesList = {"Fácil","Normal","Difícil"};
         SpinnerListModel spinner = new SpinnerListModel(dificultadesList);
         JSpinner dificultades = new JSpinner(spinner);
+        ((DefaultEditor) dificultades.getEditor()).getTextField().setEditable(false);
+        dificultades.setValue(dificultadesList[1]);
         dificultad.add(dificultades);
         panelSup.add(dificultad,BorderLayout.NORTH);
-        // Música
+        // Activación/desactivación de música
         JPanel musica = new JPanel(new FlowLayout());
         JLabel nombreM = new JLabel("Música:");
         musica.add(nombreM);
@@ -41,14 +44,14 @@ public class Opciones extends Ventana {
         checkbox.setSelected(true);
         musica.add(checkbox);
         panelSup.add(musica,BorderLayout.CENTER);
+        panelSup.add(new JLabel("Royalty Free Music from Bensound"),BorderLayout.SOUTH);
         add(panelSup,BorderLayout.NORTH);
         // Muestro el juego por pantalla y asocio vista con modelo
         JButton restablecer = new JButton("Restablecer ajustes por defecto");
         restablecer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                modelo.cambiarDificultad(1); // Restablece dificultad por defecto
-                if (!m.sonando())
-                    m.iniciarSonidoContinuo();
+                dificultades.setValue(dificultadesList[1]);
+                checkbox.setSelected(true);
                 sonidoBoton();
             }
         });
@@ -56,8 +59,24 @@ public class Opciones extends Ventana {
         // Configuro botones de la parte inferior
         JButton aplicar = new JButton("Aplicar");
         aplicar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e){
-                // Función de comprobación del modelo
+            public void actionPerformed(ActionEvent e){ // Aplicamos los cambios al modelo
+                if (dificultades.getValue() == "Fácil") {
+                    modelo.cambiarDificultad(4);
+                } else if (dificultades.getValue() == "Normal") {
+                    modelo.cambiarDificultad(6);
+                } else {
+                    modelo.cambiarDificultad(8);
+                }
+                if (checkbox.isSelected()) {
+                    if (!m.sonando()) {
+                        m.iniciarSonidoContinuo();
+                    }
+                } else{
+                    if (m.sonando()) {
+                        m.pararSonido();
+                    }
+                }   
+                reactivar(m);
                 sonidoBoton();
                 dispose();
             }

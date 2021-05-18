@@ -16,23 +16,25 @@ public class Jugar extends Ventana {
     private ModeloJuego modelo;
     private VistaJuego tablero = new VistaJuego(modelo);
     
+    private JButton fichas, instrucciones, reloj, borrar, comprobar;
+    
     public Jugar(ModeloJuego model, MenuPrincipal m) {
         modelo = model;
-        //new Reloj();
-        //new CajaFichas();
+        Jugar self = this;
         setLayout(new BorderLayout());
         // Configuro botones de la parte superior
         JPanel btnPanelSup = new JPanel(new FlowLayout());
-        JButton fichas = new JButton("Fichas");
+        fichas = new JButton("Fichas");
         fichas.setEnabled(false);
         fichas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Fichas();
+                new CajaFichas(modelo,self);
+                fichas.setEnabled(false);
                 sonidoBoton();
             }
         });
         btnPanelSup.add(fichas);
-        JButton instrucciones = new JButton("Instrucciones");
+        instrucciones = new JButton("Instrucciones");
         instrucciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 //new Pista();
@@ -40,11 +42,12 @@ public class Jugar extends Ventana {
             }
         });
         btnPanelSup.add(instrucciones);
-        JButton reloj = new JButton("Reloj");
+        reloj = new JButton("Reloj");
         reloj.setEnabled(false);
         reloj.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Reloj();
+                //Volver a mostrar reloj
+                reloj.setEnabled(false);
                 sonidoBoton();
             }
         });
@@ -55,7 +58,7 @@ public class Jugar extends Ventana {
         add(tablero,BorderLayout.CENTER);
         // Configuro botones de la parte inferior
         JPanel btnPanelInf = new JPanel(new FlowLayout());
-        JButton borrar = new JButton("Borrar");
+        borrar = new JButton("Borrar");
         borrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 // Función de borrado del modelo
@@ -63,7 +66,7 @@ public class Jugar extends Ventana {
             }
         });
         btnPanelInf.add(borrar);
-        JButton comprobar = new JButton("¡Lo tengo!");
+        comprobar = new JButton("¡Lo tengo!");
         comprobar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 // Función de comprobación del modelo
@@ -73,11 +76,21 @@ public class Jugar extends Ventana {
         btnPanelInf.add(comprobar);
         add(btnPanelInf,BorderLayout.SOUTH);
         // Configuracion de la ventana
+        //new VistaReloj();
+        new CajaFichas(modelo,self);
         setTitle("Jugar");
         pack();
         setResizable(false);
         reactivar(m);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+    
+    public void reactivarFichas() {
+        fichas.setEnabled(true);
+    }
+    
+    public void reactivarReloj() {
+        reloj.setEnabled(true);
     }
 }
