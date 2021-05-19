@@ -10,11 +10,14 @@ import javax.swing.JFrame;
  */
 public class CajaFichas extends JFrame {
     
-    public CajaFichas(ModeloJuego modelo, Jugar j) {
+    private ModeloJuego modelo;
+    
+    public CajaFichas(ModeloJuego m, Jugar j) {
+        modelo = m;
         setLayout(new FlowLayout());
-        setBackground(new Color(165,100,32)); // Marrón
+        this.getContentPane().setBackground(new Color(165,100,32)); // Marrón
         for (int i = 1; i<=modelo.getTamano(); i++) {
-            add(new Chincheta(i));
+            add(new Chincheta(modelo, i));
         }
         // Configuracion de la ventana
         setTitle("Fichas");

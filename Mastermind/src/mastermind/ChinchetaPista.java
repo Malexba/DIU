@@ -21,15 +21,19 @@ public class ChinchetaPista extends JComponent {
 
     //draw component
     public void paint(Graphics g) {
-        if (currColor == 1) {
-            g.setColor(Color.WHITE);
-            g.fillOval(0,0,10,10);
-        } else if (currColor == 2) {
-            g.setColor(Color.BLACK);
-            g.fillOval(0,0,10,10);
-        } else {
-            g.setColor(Color.BLACK);
-            g.drawOval(0,0,10,10);
+        switch (currColor) {
+            case 1:
+                g.setColor(Color.WHITE);
+                g.fillOval(0,0,10,10);
+                break;
+            case 2:
+                g.setColor(Color.BLACK);
+                g.fillOval(0,0,10,10);
+                break;
+            default:
+                g.setColor(Color.BLACK);
+                g.drawOval(0,0,10,10);
+                break;
         }
     }
 
@@ -41,7 +45,7 @@ public class ChinchetaPista extends JComponent {
     // set color and redraw
     public void setCurrColor(int newColor) {
         currColor = newColor;
-        repaint();
+        //repaint(); Lo hace el modelo y al repintar la vista
     }
 
     //set default size

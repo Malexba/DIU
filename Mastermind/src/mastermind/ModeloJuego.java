@@ -12,8 +12,10 @@ import java.util.Observable;
 public class ModeloJuego extends Observable {
     
     private int dificultad = 6; // 4 fácil, 6 normal, 8 difícil (indica nº de bolas)
-    private int[] pista;
-    private int[] clave;
+    private int[] pista; //
+    private int[] clave = new int[4];
+    private int contador; // Nº de intentos (9 - contador es la fila en el tablero)
+    private boolean descifrado;
     
     public ModeloJuego() {
         pista = new int[dificultad];
@@ -23,16 +25,35 @@ public class ModeloJuego extends Observable {
     // Método para la generación aleatoria y asignación de una clave
     public void generaClave() {
         Random rand = new Random();
-        int[] temp = new int[dificultad];
-        for(int i = 0; i < dificultad; i++) {
-            temp[i] = rand.nextInt(6);
+        for(int i = 0; i < 4; i++) {
+            clave[i] = rand.nextInt(dificultad) + 1;
         }
-        clave = temp;
+        descifrado = false;
+        contador = 9;
+    }
+    
+    public int intentos() {
+        return contador;
+    }
+    
+    public boolean descifrado() {
+        return descifrado;
+    }
+    
+    // Devuelve la i-ésima clave
+    public int claveI(int i) {
+        return clave[i];
     }
     
     public void cambiarDificultad(int d) {
         dificultad = d;
         generaClave();
+    }
+    
+    // Actualización de las chinchetas para repintarlas
+    public void actualizar() {
+        setChanged();
+        notifyObservers();
     }
     
     //devuelve la pista 
@@ -42,6 +63,37 @@ public class ModeloJuego extends Observable {
     //devuelve el tamaño de la pista (número de elementos)(
     public int getTamano(){
         return dificultad;
+    }
+    
+    public boolean compruebaCombinacion(int intento[], ChinchetaPista pista[]) {
+        boolean ganador = true;
+        boolean encontrado;
+        int i, j, k = 0;
+        for (i = 0; i < 4; i++) { // Recorro intento
+            j = 0;
+            encontrado = false;
+            do { // Recorro clave
+                if ((intento[i] == clave[j]) && (i==j)) { // Posición y color; negro
+                    pista[k].setCurrColor(2);
+                    k++;
+                } else if (intento[i] == clave[j]) { // Posición; blanco
+                    pista[k].setCurrColor(1);
+                    k++;
+                }
+                j++;
+            } while (!encontrado && (j<4));
+        }
+        i = 0;
+        do {
+            if (pista[i].getCurrColor() != 2)
+                ganador = false;
+            i++;
+        } while(ganador && i < 4);
+        descifrado = ganador;
+        contador--;
+        setChanged();
+        notifyObservers();
+        return ganador;
     }
     /**
      * 

@@ -5,11 +5,15 @@
  */
 package mastermind;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -19,15 +23,63 @@ public class VistaJuego extends JPanel implements Observer {
     
     ModeloJuego modelo;
     
-    private Color colores[];
+    private Chincheta clave[] = new Chincheta[4];
     
-    public VistaJuego(ModeloJuego m) {
+    public VistaJuego(ModeloJuego m, Chincheta combinacion[][], ChinchetaPista pista[][]) {
         super();
+        modelo = m;
+        // create main panels, set color and layout
+        JPanel tablero = new JPanel();
+        tablero.setBackground(new Color(165,100,32));
+        tablero.setLayout(new GridLayout(10, 2, 0, 15));
+        // break between key and guesses
+        //mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        //mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        JPanel panelComb[] = new JPanel[10];
+        JPanel panelPista[] = new JPanel[10];
+        combinacion = new Chincheta[10][4];
+        pista = new ChinchetaPista[10][4];
+        for (int i=0; i<10; i++) {
+            panelPista[i] = new JPanel();
+            panelPista[i].setBackground(new Color(165,100,32));
+            panelPista[i].setLayout(new GridLayout(2,2));
+            panelComb[i] = new JPanel();
+            panelComb[i].setBackground(new Color(165,100,32));
+            for (int j=0; j<4; j++) {
+                pista[i][j] = new ChinchetaPista();
+                panelPista[i].add(pista[i][j]);
+                combinacion[i][j] = new Chincheta(modelo);
+                panelComb[i].add(combinacion[i][j]);
+            }
+            tablero.add(panelPista[i]);
+            tablero.add(panelComb[i]);
+        }
+        for (int j=0; j<4; j++) {
+            combinacion[9][j].setEdit(true);
+        }
+        setLayout(new BorderLayout());
         setBackground(new Color(165,100,32)); // Marrón
-        setLayout(new FlowLayout());
+        // Mostramos la clave a adivinar (tapada)
+        JPanel codigo = new JPanel();
+        codigo.setBackground(new Color(165,100,32));
+        codigo.setLayout(new FlowLayout());
+        for (int i = 0; i < 4; i++) {
+            clave[i] = new Chincheta(modelo, modelo.claveI(i));
+            clave[i].setVis(false);
+            System.out.print(clave[i].getCurrColor());
+            codigo.add(clave[i]);
+        }
+        add(codigo,BorderLayout.NORTH);
+        // Creamos el tablero con el que jugará el usuario
+        add(tablero,BorderLayout.CENTER);
     }
     
     public void update(Observable o, Object arg) {
-        
+        if (modelo.descifrado() || modelo.intentos() < 0) { // Mostramos el código si el usuario ha ganado
+            for (int i = 0; i < 4; i++) {
+                clave[i].setVis(true);
+            }
+        }
+        repaint();
     }
 }

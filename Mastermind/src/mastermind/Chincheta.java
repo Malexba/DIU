@@ -16,9 +16,10 @@ import java.awt.event.*;
 // Custom button to take input for Mastermind game
 public class Chincheta extends JComponent implements MouseListener {
     
+    ModeloJuego modelo;
+    
     // properties of button
     private int currColor;
-    private int tam; // Nº de fichas disponibles, depende de dificultad
     private Color colores[]; // new Color(102,0,153); // Morado
     private boolean mousePressed;
     private boolean editable; // Para poder editar el color al pulsar
@@ -26,7 +27,7 @@ public class Chincheta extends JComponent implements MouseListener {
 
     // constructor de chinchetas del tablero
     public Chincheta(ModeloJuego m) {
-        tam = m.getTamano();
+        modelo = m;
         
         this.addMouseListener(this);
 
@@ -46,8 +47,9 @@ public class Chincheta extends JComponent implements MouseListener {
         colores[8] = Color.PINK;
     }
     
-    // Constructor de chinchetas de la caja
-    public Chincheta(int c) {
+    // Constructor de chinchetas de la caja y la clave
+    public Chincheta(ModeloJuego m, int c) {
+        modelo = m;
         currColor = c;
         
         this.addMouseListener(this);
@@ -71,7 +73,7 @@ public class Chincheta extends JComponent implements MouseListener {
     public void paint(Graphics g) {
         // if mouse was clicked, go to next color
         if (mousePressed) {
-            if (currColor == tam) {
+            if (currColor == modelo.getTamano()) {
                 // and if at end, return to beginning of color list
                 currColor = 1;
             } else {
@@ -98,7 +100,13 @@ public class Chincheta extends JComponent implements MouseListener {
     //set color and then redraw
     public void setCurrColor(int newColor) {
         currColor = newColor;
-        repaint();
+        modelo.actualizar();
+    }
+    
+    // Función para el bot´ón borrar, las devuelve a negro
+    public void resetearChincheta() {
+        currColor = 0;
+        modelo.actualizar();
     }
 
     //set edit state
@@ -109,7 +117,7 @@ public class Chincheta extends JComponent implements MouseListener {
     // set visible state and redraw
     public void setVis(boolean vis) {
         visible = vis;
-        repaint();
+        modelo.actualizar();
     }
 
     // set default size of component
@@ -149,7 +157,7 @@ public class Chincheta extends JComponent implements MouseListener {
     public void mousePressed(MouseEvent e) {
         if (editable) {
             mousePressed = true;
-            repaint();
+            modelo.actualizar();
         }
     }
 
