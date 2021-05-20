@@ -23,7 +23,6 @@ public class CajaFichas extends JFrame {
         setTitle("Fichas");
         pack();
         setResizable(false);
-        j.reactivarFichas();
         setLocationRelativeTo(null);
         setVisible(true);
     }

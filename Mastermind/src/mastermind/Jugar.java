@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,8 +40,12 @@ public class Jugar extends Ventana {
         fichas.setEnabled(false);
         fichas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                new CajaFichas(modelo,self);
-                fichas.setEnabled(false);
+                CajaFichas caja = new CajaFichas(modelo,self);
+                caja.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        fichas.setEnabled(true);
+                    }
+                });
                 sonidoBoton();
             }
         });
@@ -64,6 +70,8 @@ public class Jugar extends Ventana {
         btnPanelSup.add(reloj);
         add(btnPanelSup,BorderLayout.NORTH);
         // Creamos el tablero, muestro el juego por pantalla y asocio vista con modelo
+        combinacion = new Chincheta[10][4];
+        pista = new ChinchetaPista[10][4];
         tablero = new VistaJuego(modelo, combinacion, pista);
         modelo.addObserver(tablero);
         add(tablero,BorderLayout.CENTER);
@@ -72,7 +80,6 @@ public class Jugar extends Ventana {
         borrar = new JButton("Borrar");
         borrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                System.out.println(modelo.intentos());
                 for (int j=0; j<4; j++){
                     combinacion[modelo.intentos()][j].resetearChincheta();
                 }
@@ -84,16 +91,22 @@ public class Jugar extends Ventana {
         comprobar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 intentoValido = true;
-                for (int j=0; j<4; j++) {
+                int j = 0;
+                intento = new int[4];
+                do {
                     intento[j] = combinacion[modelo.intentos()][j].getCurrColor();
                     if (intento[j] == 0) {
                         intentoValido = false;
                     }
-                }
+                    j++;
+                } while ( ( intentoValido ) && ( j < 4 ) );
                 if (intentoValido) {
+                    for (j=0; j<4; j++) {
+                        combinacion[modelo.intentos()][j].setEdit(false);
+                    }
                     if (modelo.compruebaCombinacion(intento, pista[modelo.intentos()])) { // Jugador ha ganado la partida, guardamos su nombre
                         String inputValue = JOptionPane.showInputDialog("¡Felicidades, lo has descifrado!\nEscribe aquí el nombre por el\nque quieres que se te recuerde:");
-                    } else { // Jugador ha perdido un intento, comprobamos que no haya perdido la partida
+                    } else { // Jugador ha perdido un intento, comprobamos que no haya perdido la partida; permitimos edición de siguiente intento
                         if (modelo.intentos() < 0) { // Jugador se ha quedado sin intentos
                             ans = JOptionPane.showConfirmDialog(null,"¡Casi lo tenías!\n¿Quieres jugar otra vez?", "Derrota", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                             if ( ans == 0 ) { // Reiniciamos código para adivinar
@@ -102,6 +115,10 @@ public class Jugar extends Ventana {
                                 dispose();
                             } else {
                                 System.out.println("ERROR");
+                            }
+                        } else { // Dejamos que jugador pueda editar las siguientes fichas
+                            for (j=0; j<4; j++) {
+                                combinacion[modelo.intentos()][j].setEdit(true);
                             }
                         }
                     }
@@ -119,16 +136,7 @@ public class Jugar extends Ventana {
         setTitle("Jugar");
         pack();
         setResizable(false);
-        reactivar(m);
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-    
-    public void reactivarFichas() {
-        fichas.setEnabled(true);
-    }
-    
-    public void reactivarReloj() {
-        reloj.setEnabled(true);
     }
 }

@@ -117,7 +117,6 @@ public class Chincheta extends JComponent implements MouseListener {
     // set visible state and redraw
     public void setVis(boolean vis) {
         visible = vis;
-        modelo.actualizar();
     }
 
     // set default size of component

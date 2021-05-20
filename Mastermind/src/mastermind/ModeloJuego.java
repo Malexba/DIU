@@ -66,34 +66,37 @@ public class ModeloJuego extends Observable {
     }
     
     public boolean compruebaCombinacion(int intento[], ChinchetaPista pista[]) {
-        boolean ganador = true;
-        boolean encontrado;
+        descifrado = true;
+        boolean encontrado[] = new boolean[4]; // Falsos por defecto
         int i, j, k = 0;
-        for (i = 0; i < 4; i++) { // Recorro intento
-            j = 0;
-            encontrado = false;
-            do { // Recorro clave
-                if ((intento[i] == clave[j]) && (i==j)) { // Posición y color; negro
-                    pista[k].setCurrColor(2);
-                    k++;
-                } else if (intento[i] == clave[j]) { // Posición; blanco
-                    pista[k].setCurrColor(1);
-                    k++;
-                }
-                j++;
-            } while (!encontrado && (j<4));
+        // Búsqueda de coincidencia en posición y color
+        for (i = 0; i < 4; i++) {
+            if (intento[i] == clave[i]) { // Posición y color; negro
+                encontrado[i] = true;
+                pista[k].setCurrColor(2);
+                k++;
+            } else { // Ficha no coincide en posición y color, jugador no puede haber ganado
+                descifrado = false;
+            }  
         }
-        i = 0;
-        do {
-            if (pista[i].getCurrColor() != 2)
-                ganador = false;
-            i++;
-        } while(ganador && i < 4);
-        descifrado = ganador;
+        // Búsqueda de coincidencia en color, solo buscamos si no ha ganado ya
+        if (!descifrado) {
+            for (j = 0; j < 4; j++) { // Recorro clave
+                for (i=0; i<4; i++) { // Recorro intento
+                    if (!encontrado[i]) {
+                        if (intento[i] == clave[j]) { // Posición; blanco
+                            encontrado[i] = true;
+                            pista[k].setCurrColor(1);
+                            k++;
+                        }
+                    }
+                }
+            }
+        }
         contador--;
         setChanged();
         notifyObservers();
-        return ganador;
+        return descifrado;
     }
     /**
      * 

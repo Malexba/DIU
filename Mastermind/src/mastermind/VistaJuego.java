@@ -32,13 +32,8 @@ public class VistaJuego extends JPanel implements Observer {
         JPanel tablero = new JPanel();
         tablero.setBackground(new Color(165,100,32));
         tablero.setLayout(new GridLayout(10, 2, 0, 15));
-        // break between key and guesses
-        //mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        //mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         JPanel panelComb[] = new JPanel[10];
         JPanel panelPista[] = new JPanel[10];
-        combinacion = new Chincheta[10][4];
-        pista = new ChinchetaPista[10][4];
         for (int i=0; i<10; i++) {
             panelPista[i] = new JPanel();
             panelPista[i].setBackground(new Color(165,100,32));

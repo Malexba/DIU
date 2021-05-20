@@ -33,7 +33,16 @@ public class Opciones extends Ventana {
         SpinnerListModel spinner = new SpinnerListModel(dificultadesList);
         JSpinner dificultades = new JSpinner(spinner);
         ((DefaultEditor) dificultades.getEditor()).getTextField().setEditable(false);
-        dificultades.setValue(dificultadesList[1]);
+        int difActual;
+        switch(modelo.getTamano()) {
+            case 4:
+                difActual = 0;
+            case 8:
+                difActual = 2;
+            default:
+                difActual = 1;
+        }
+        dificultades.setValue(dificultadesList[difActual]);
         dificultad.add(dificultades);
         panelSup.add(dificultad,BorderLayout.NORTH);
         // Activación/desactivación de música
@@ -41,7 +50,7 @@ public class Opciones extends Ventana {
         JLabel nombreM = new JLabel("Música:");
         musica.add(nombreM);
         JCheckBox checkbox = new JCheckBox();
-        checkbox.setSelected(true);
+        checkbox.setSelected(m.sonando());
         musica.add(checkbox);
         panelSup.add(musica,BorderLayout.CENTER);
         panelSup.add(new JLabel("Royalty Free Music from Bensound"),BorderLayout.SOUTH);
@@ -75,10 +84,8 @@ public class Opciones extends Ventana {
                     if (m.sonando()) {
                         m.pararSonido();
                     }
-                }   
-                reactivar(m);
+                }
                 sonidoBoton();
-                dispose();
             }
         });
         add(aplicar,BorderLayout.SOUTH);
@@ -86,7 +93,6 @@ public class Opciones extends Ventana {
         setTitle("Opciones");
         pack();
         setResizable(false);
-        reactivar(m);
         setLocationRelativeTo(null);
         setVisible(true);
     }

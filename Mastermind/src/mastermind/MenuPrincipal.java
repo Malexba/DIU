@@ -29,7 +29,12 @@ public class MenuPrincipal extends Ventana {
         MenuPrincipal self = this;
         jugar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                new Jugar(modelo, self);
+                Jugar j = new Jugar(modelo, self);
+                j.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        rehabilitar();
+                    }
+                });
                 sonidoBoton();
                 deshabilitar();
             }
@@ -53,7 +58,12 @@ public class MenuPrincipal extends Ventana {
         opciones = new JButton("Opciones");
         opciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                new Opciones(modelo, self);
+                Opciones opc = new Opciones(modelo, self);
+                opc.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        rehabilitar();
+                    }
+                });
                 sonidoBoton();
                 deshabilitar();
             }
