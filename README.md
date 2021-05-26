@@ -1,5 +1,3 @@
 # DIU
 
-Al pulsar el botón Aplicar no se reactivan los botones del menú principal.
-
-Al cerrar la ventana de Fichas no se reactiva el botón Fichas de Jugar; de hecho, ni siquiera se desactiva al crear la caja.
+Al cerrar Jugar sus ventanas hijas no desaparecen. Instrucciones no furula. Implementar Drag & Drop.
