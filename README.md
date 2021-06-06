@@ -1,3 +1,3 @@
 # DIU
 
-Instrucciones no furula. Implementar Drag & Drop.
+Drag bien, Drop mal. Comprobar combinación creo que no funciona del todo
