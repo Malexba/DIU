@@ -1,9 +1,11 @@
 package mastermind;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -13,7 +15,9 @@ import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerListModel;
 
 /**
- * Clase que representa el controlador del juego.
+ * Ventana para la gestión de opciones.
+ * Permite cambiar la dificultad y gestionar si se quiere que se
+ * reproduzca música. Los cambios se aplican una vez lo confirme el usuario.
  * @author Grupo 5
  */
 public class Opciones extends Ventana {
@@ -22,7 +26,7 @@ public class Opciones extends Ventana {
     
     public Opciones(ModeloJuego model, MenuPrincipal m) {
         modelo = model;
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10,10));
         // Configuro botones de la parte superior
         JPanel panelSup = new JPanel(new BorderLayout());
         // Selector de dificulad
@@ -34,13 +38,12 @@ public class Opciones extends Ventana {
         JSpinner dificultades = new JSpinner(spinner);
         ((DefaultEditor) dificultades.getEditor()).getTextField().setEditable(false);
         int difActual;
-        switch(modelo.getTamano()) {
-            case 4:
-                difActual = 0;
-            case 8:
-                difActual = 2;
-            default:
-                difActual = 1;
+        if ( modelo.getTamano() == 4 ) {
+            difActual = 0;
+        } else if ( modelo.getTamano() == 8) {
+            difActual = 2;
+        } else {
+            difActual = 1;
         }
         dificultades.setValue(dificultadesList[difActual]);
         dificultad.add(dificultades);
@@ -53,7 +56,9 @@ public class Opciones extends Ventana {
         checkbox.setSelected(m.sonando());
         musica.add(checkbox);
         panelSup.add(musica,BorderLayout.CENTER);
-        panelSup.add(new JLabel("Royalty Free Music from Bensound"),BorderLayout.SOUTH);
+        JLabel creditos = new JLabel("Royalty Free Music from Bensound", JLabel.CENTER);
+        creditos.setForeground(Color.BLUE);
+        panelSup.add(creditos,BorderLayout.SOUTH);
         add(panelSup,BorderLayout.NORTH);
         // Muestro el juego por pantalla y asocio vista con modelo
         JButton restablecer = new JButton("Restablecer ajustes por defecto");
@@ -67,6 +72,7 @@ public class Opciones extends Ventana {
         add(restablecer,BorderLayout.CENTER);
         // Configuro botones de la parte inferior
         JButton aplicar = new JButton("Aplicar");
+        Opciones self = this;
         aplicar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){ // Aplicamos los cambios al modelo
                 if (dificultades.getValue() == "Fácil") {
@@ -86,6 +92,7 @@ public class Opciones extends Ventana {
                     }
                 }
                 sonidoBoton();
+                dispatchEvent(new WindowEvent(self, WindowEvent.WINDOW_CLOSING));
             }
         });
         add(aplicar,BorderLayout.SOUTH);

@@ -2,8 +2,16 @@ package mastermind;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -11,17 +19,20 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 
 /**
  * Clase que representa el controlador del juego.
+ * Permite acceder a una indicación de instrucciones, al reloj y a la caja
+ * de fichas. Si no se ha enviado, puede limpiarse la selección de colores
+ * del intento actual pulsando el botón borrar.
  * @author Grupo 5
  */
-public class Jugar extends Ventana {
+public class Jugar extends Ventana implements DragGestureListener {
     
+    private ModeloReloj mReloj;
     private ModeloJuego modelo;
     private VistaJuego tablero;
+    private VistaReloj vReloj;
     
     private int ans; // Respuesta a OptionPane
     private boolean intentoValido; // Comprueba que todos los círculos estén rellenos
@@ -29,9 +40,12 @@ public class Jugar extends Ventana {
     private JButton fichas, instrucciones, reloj, borrar, comprobar;
     private Chincheta combinacion[][];
     private ChinchetaPista pista[][];
+    private CajaFichas caja;
+    private Pista inst;
     
     public Jugar(ModeloJuego model, MenuPrincipal m) {
         modelo = model;
+        model.generaClave();
         Jugar self = this;
         setLayout(new BorderLayout());
         // Configuro botones de la parte superior
@@ -40,7 +54,8 @@ public class Jugar extends Ventana {
         fichas.setEnabled(false);
         fichas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                CajaFichas caja = new CajaFichas(modelo,self);
+                fichas.setEnabled(false);
+                caja = new CajaFichas(modelo,self);
                 caja.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
                         fichas.setEnabled(true);
@@ -53,7 +68,13 @@ public class Jugar extends Ventana {
         instrucciones = new JButton("Instrucciones");
         instrucciones.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //new Pista();
+                instrucciones.setEnabled(false);
+                inst = new Pista();
+                inst.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        instrucciones.setEnabled(true);
+                    }
+                });
                 sonidoBoton();
             }
         });
@@ -62,8 +83,14 @@ public class Jugar extends Ventana {
         reloj.setEnabled(false);
         reloj.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                //Volver a mostrar reloj
                 reloj.setEnabled(false);
+                vReloj = new VistaReloj(mReloj);
+                mReloj.addObserver(vReloj);
+                vReloj.addWindowListener(new WindowAdapter() {
+                    public void windowClosing(WindowEvent e) {
+                        reloj.setEnabled(true);
+                    }
+                });
                 sonidoBoton();
             }
         });
@@ -73,6 +100,11 @@ public class Jugar extends Ventana {
         combinacion = new Chincheta[10][4];
         pista = new ChinchetaPista[10][4];
         tablero = new VistaJuego(modelo, combinacion, pista);
+        for (int j=0; j<10; j++) {
+            for (int i = 0; i<4; i++) {
+                new MyDropTargetListener(combinacion[j][i]);
+            }
+        }
         modelo.addObserver(tablero);
         add(tablero,BorderLayout.CENTER);
         // Configuro botones de la parte inferior
@@ -105,14 +137,19 @@ public class Jugar extends Ventana {
                         combinacion[modelo.intentos()][j].setEdit(false);
                     }
                     if (modelo.compruebaCombinacion(intento, pista[modelo.intentos()])) { // Jugador ha ganado la partida, guardamos su nombre
+                        mReloj.parar();
                         String inputValue = JOptionPane.showInputDialog("¡Felicidades, lo has descifrado!\nEscribe aquí el nombre por el\nque quieres que se te recuerde:");
+                        // GESTIÓN DE RESULTADOS
                     } else { // Jugador ha perdido un intento, comprobamos que no haya perdido la partida; permitimos edición de siguiente intento
                         if (modelo.intentos() < 0) { // Jugador se ha quedado sin intentos
+                            mReloj.parar();
                             ans = JOptionPane.showConfirmDialog(null,"¡Casi lo tenías!\n¿Quieres jugar otra vez?", "Derrota", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                             if ( ans == 0 ) { // Reiniciamos código para adivinar
-                                modelo.cambiarDificultad(modelo.getTamano());
+                                modelo.generaClave();
+                                mReloj.resetear();
                             } else if (ans == 1) { // Cerramos pestaña juego
-                                dispose();
+                                cerrarSubventanas();
+                                cerrar();
                             } else {
                                 System.out.println("ERROR");
                             }
@@ -131,12 +168,74 @@ public class Jugar extends Ventana {
         btnPanelInf.add(comprobar);
         add(btnPanelInf,BorderLayout.SOUTH);
         // Configuracion de la ventana
-        //new VistaReloj();
-        new CajaFichas(modelo,self);
+        mReloj = new ModeloReloj();
+        vReloj = new VistaReloj(mReloj);
+        mReloj.addObserver(vReloj);
+        vReloj.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                reloj.setEnabled(true);
+            }
+        });
+        caja = new CajaFichas(modelo,self);
+        caja.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                fichas.setEnabled(true);
+            }
+        });
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                cerrarSubventanas();
+            }
+        });
         setTitle("Jugar");
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+    
+    private void cerrarSubventanas() { // Cerrar instrucciones, reloj y fichas
+        if (caja != null)
+            caja.cerrar();
+        if (inst != null)
+            inst.cerrar();
+        if (vReloj != null)
+            vReloj.cerrar();
+    }
+    
+    private class MyDropTargetListener extends DropTargetAdapter{
+        
+        private DropTarget dropTarget;
+        private Chincheta chin;
+        
+        public MyDropTargetListener(Chincheta chin) {
+            this.chin= chin;
+            dropTarget= new DropTarget(chin, DnDConstants.ACTION_COPY, this, true, null);
+        }
+        
+        public void drop(DropTargetDropEvent event) {
+            try {
+                Transferable tr = event.getTransferable();
+                Color color = (Color) tr.getTransferData(TransferableColor.getColorFlavor());
+                if(event.isDataFlavorSupported(TransferableColor.getColorFlavor())) {
+                    event.acceptDrop(DnDConstants.ACTION_COPY);
+                    this.chin.setCurrColor(color);
+                    event.dropComplete(true);
+                    return;
+                }
+                event.rejectDrop();
+            } catch (Exception e) { e.printStackTrace(); event.rejectDrop(); }
+        }
+    }
+
+    @Override
+    public void dragGestureRecognized(DragGestureEvent event) {
+        Cursor cursor = null;
+        Chincheta chin = (Chincheta) event.getComponent();
+        Color color = chin.getColor();
+        if(event.getDragAction() == DnDConstants.ACTION_COPY) {
+            cursor = DragSource.DefaultCopyDrop;
+        }
+        event.startDrag(cursor, new TransferableColor(color));
     }
 }

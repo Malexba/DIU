@@ -47,7 +47,6 @@ public class ModeloJuego extends Observable {
     
     public void cambiarDificultad(int d) {
         dificultad = d;
-        generaClave();
     }
     
     // Actualización de las chinchetas para repintarlas
@@ -68,7 +67,8 @@ public class ModeloJuego extends Observable {
     public boolean compruebaCombinacion(int intento[], ChinchetaPista pista[]) {
         descifrado = true;
         boolean encontrado[] = new boolean[4]; // Falsos por defecto
-        int i, j, k = 0;
+        int i, j, k = 0, l = 0;
+        int[] falta = new int[4]; // Elementos del intento que restan por ser encontrados
         // Búsqueda de coincidencia en posición y color
         for (i = 0; i < 4; i++) {
             if (intento[i] == clave[i]) { // Posición y color; negro
@@ -76,15 +76,17 @@ public class ModeloJuego extends Observable {
                 pista[k].setCurrColor(2);
                 k++;
             } else { // Ficha no coincide en posición y color, jugador no puede haber ganado
+                falta[l] = intento[i];
+                l++;
                 descifrado = false;
             }  
         }
         // Búsqueda de coincidencia en color, solo buscamos si no ha ganado ya
         if (!descifrado) {
-            for (j = 0; j < 4; j++) { // Recorro clave
-                for (i=0; i<4; i++) { // Recorro intento
+            for (j = 0; j < l; j++) { // Recorro los que faltan
+                for (i=0; i<4; i++) { // Recorro clave
                     if (!encontrado[i]) {
-                        if (intento[i] == clave[j]) { // Posición; blanco
+                        if (clave[i] == falta[j]) { // Posición; blanco
                             encontrado[i] = true;
                             pista[k].setCurrColor(1);
                             k++;

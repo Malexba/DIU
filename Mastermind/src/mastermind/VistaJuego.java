@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mastermind;
 
 import java.awt.BorderLayout;
@@ -12,12 +7,13 @@ import java.awt.GridLayout;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 
 /**
- *
- * @author Alejandro
+ * Tablero de juego del Mastermind.
+ * Incluye 10 intentos (junto a las correspondientes pistas) para que el
+ * usuario intente acertar el código, también incluido -aunque sin mostrar
+ * sus colores- en la parte superior.
+ * @author Grupo 5
  */
 public class VistaJuego extends JPanel implements Observer {
     
@@ -28,7 +24,7 @@ public class VistaJuego extends JPanel implements Observer {
     public VistaJuego(ModeloJuego m, Chincheta combinacion[][], ChinchetaPista pista[][]) {
         super();
         modelo = m;
-        // create main panels, set color and layout
+        // Creación del tablero
         JPanel tablero = new JPanel();
         tablero.setBackground(new Color(165,100,32));
         tablero.setLayout(new GridLayout(10, 2, 0, 15));
@@ -65,7 +61,7 @@ public class VistaJuego extends JPanel implements Observer {
             codigo.add(clave[i]);
         }
         add(codigo,BorderLayout.NORTH);
-        // Creamos el tablero con el que jugará el usuario
+        // Añadimos el tablero con el que jugará el usuario
         add(tablero,BorderLayout.CENTER);
     }
     

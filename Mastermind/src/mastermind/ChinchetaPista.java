@@ -6,20 +6,27 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 
 /**
- *
- * @author Alejandro
+ * Clase que representa a una chincheta de pista.
+ * Indica al usuario si ha acertado en su intento solo color (blanco) o también
+ * la posición (negro)
+ * @author Grupo 5
  */
-// custom button to display clues for Mastermind
+
 public class ChinchetaPista extends JComponent {
-    // data member
+    
     private int  currColor;
 
     // constructor
     public ChinchetaPista() {
         currColor = 0;
     }
+    
+    // Constructor para instrucciones
+    public ChinchetaPista(int c) {
+        currColor = c;
+    }
 
-    //draw component
+    // Dibujo de la chincheta
     public void paint(Graphics g) {
         switch (currColor) {
             case 1:
@@ -37,18 +44,17 @@ public class ChinchetaPista extends JComponent {
         }
     }
 
-    // get color
+    // Color actual
     public int getCurrColor() {
         return currColor;
     }
 
-    // set color and redraw
+    // Cambiar color actual
     public void setCurrColor(int newColor) {
         currColor = newColor;
-        //repaint(); Lo hace el modelo y al repintar la vista
     }
 
-    //set default size
+    // Dimensiones
     public Dimension getMinimumSize() {
         return new Dimension(10,10);
     }

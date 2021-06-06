@@ -6,7 +6,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
 /**
- *
+ * Clase para la gestión de colores del Drag & Drop
  * @author Grupo 5
  */
 public class TransferableColor implements Transferable {
