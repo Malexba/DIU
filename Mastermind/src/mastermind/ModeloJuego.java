@@ -66,30 +66,32 @@ public class ModeloJuego extends Observable {
     
     public boolean compruebaCombinacion(int intento[], ChinchetaPista pista[]) {
         descifrado = true;
-        boolean encontrado[] = new boolean[4]; // Falsos por defecto
-        int i, j, k = 0, l = 0;
-        int[] falta = new int[4]; // Elementos del intento que restan por ser encontrados
+        boolean encontradoC[] = new boolean[4]; // Falsos por defecto; para clave
+        boolean encontradoI[] = new boolean[4]; // Falsos por defecto; para intento
+        int i, j, k = 0;
         // Búsqueda de coincidencia en posición y color
         for (i = 0; i < 4; i++) {
             if (intento[i] == clave[i]) { // Posición y color; negro
-                encontrado[i] = true;
+                encontradoC[i] = true;
+                encontradoI[i] = true;
                 pista[k].setCurrColor(2);
                 k++;
             } else { // Ficha no coincide en posición y color, jugador no puede haber ganado
-                falta[l] = intento[i];
-                l++;
                 descifrado = false;
             }  
         }
         // Búsqueda de coincidencia en color, solo buscamos si no ha ganado ya
         if (!descifrado) {
-            for (j = 0; j < l; j++) { // Recorro los que faltan
-                for (i=0; i<4; i++) { // Recorro clave
-                    if (!encontrado[i]) {
-                        if (clave[i] == falta[j]) { // Posición; blanco
-                            encontrado[i] = true;
-                            pista[k].setCurrColor(1);
-                            k++;
+            for (j = 0; j < 4; j++) { // Recorro intento
+                if (!encontradoI[j]) {
+                    for (i=0; i<4; i++) { // Recorro clave
+                        if (!encontradoC[i] && !encontradoI[j]) {
+                            if (clave[i] == intento[j]) { // Posición; blanco
+                                encontradoI[j] = true;
+                                encontradoC[i] = true;
+                                pista[k].setCurrColor(1);
+                                k++;
+                            }
                         }
                     }
                 }
@@ -99,53 +101,5 @@ public class ModeloJuego extends Observable {
         setChanged();
         notifyObservers();
         return descifrado;
-    }
-    /**
-     * 
-     * @param combinacion representa la combinación, en forma de String, que introduce el usuario. El formato es una serie de  N números o caracteres que representan la combinación, donde N es el número de elementos de la combinación.
-     * @param clave representa la clave, en forma de array de enteros, que se debe acertar. El formato es una serie de  N números o caracteres que representan la clave, donde N es el número de elementos de la clave.
-     * @return true si el usuario acierta la clave a través de su combinación y false en caso contrario.
-     */ 
-    public boolean compruebaCombinacion(String combinacion, String clave){
-        // inicia los valores del array pista a cero
-        for(int i=0; i<pista.length;i++)
-              pista[i]=0;
-        
-        ArrayList<Character> combinacionA=new ArrayList<Character>(); 
-        ArrayList<Character> claveA=new ArrayList<Character>(); 
-        int contador=0;
-        
-        //registro con un 2 en la pista aquellos elementos de la combinación y la clave que coinciden en posición y valor.
-        for(int i=0; i<combinacion.length();i++)
-            if (clave.charAt(i)==combinacion.charAt(i)){
-                pista[contador]=2;
-                contador+=1;
-            } else{
-                combinacionA.add(combinacion.charAt(i));
-                claveA.add(clave.charAt(i));
-            }
-        //registro con un 1 en la pista aquellos elementos de la combinación y la clave que solo conciden en valor.
-        for(int i=0; i<combinacionA.size();i++)
-                for(int j=0; j<claveA.size();j++)
-                    if(combinacionA.get(i).equals(claveA.get(j))){
-                        claveA.remove(j);
-                        pista[contador]=1; 
-                        contador+=1;
-                        break;
-                    }
-        
-        //los elementos que no coniciden de ninguna forma permanecen a cero en la pista. 
-        setChanged();
-        notifyObservers();
-       
-        boolean ganador=true;
-        // Se comprueba si se ha acertado la combinación chequeando que todas las posiciones contengan un 2.
-        for(int k=0; k<pista.length;k++)
-            ganador=ganador&&(pista[k]==2);
-        
-        if(ganador)
-            return true;
-        else
-            return false;    
     }
 }

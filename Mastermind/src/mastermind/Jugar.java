@@ -27,7 +27,7 @@ import javax.swing.JPanel;
  * del intento actual pulsando el botón borrar.
  * @author Grupo 5
  */
-public class Jugar extends Ventana implements DragGestureListener {
+public class Jugar extends Ventana {
     
     private ModeloReloj mReloj;
     private ModeloJuego modelo;
@@ -40,7 +40,7 @@ public class Jugar extends Ventana implements DragGestureListener {
     private JButton fichas, instrucciones, reloj, borrar, comprobar;
     private Chincheta combinacion[][];
     private ChinchetaPista pista[][];
-    private CajaFichas caja;
+    private ControladorCaja caja;
     private Pista inst;
     
     public Jugar(ModeloJuego model, MenuPrincipal m) {
@@ -55,7 +55,8 @@ public class Jugar extends Ventana implements DragGestureListener {
         fichas.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 fichas.setEnabled(false);
-                caja = new CajaFichas(modelo,self);
+                //caja = new CajaFichas(modelo,self);
+                caja=new ControladorCaja(modelo);
                 caja.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
                         fichas.setEnabled(true);
@@ -176,7 +177,7 @@ public class Jugar extends Ventana implements DragGestureListener {
                 reloj.setEnabled(true);
             }
         });
-        caja = new CajaFichas(modelo,self);
+        caja=new ControladorCaja(modelo);
         caja.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 fichas.setEnabled(true);
@@ -216,7 +217,7 @@ public class Jugar extends Ventana implements DragGestureListener {
         public void drop(DropTargetDropEvent event) {
             try {
                 Transferable tr = event.getTransferable();
-                Color color = (Color) tr.getTransferData(TransferableColor.getColorFlavor());
+                int color = (Integer) tr.getTransferData(TransferableColor.getColorFlavor());
                 if(event.isDataFlavorSupported(TransferableColor.getColorFlavor())) {
                     event.acceptDrop(DnDConstants.ACTION_COPY);
                     this.chin.setCurrColor(color);
@@ -228,14 +229,5 @@ public class Jugar extends Ventana implements DragGestureListener {
         }
     }
 
-    @Override
-    public void dragGestureRecognized(DragGestureEvent event) {
-        Cursor cursor = null;
-        Chincheta chin = (Chincheta) event.getComponent();
-        Color color = chin.getColor();
-        if(event.getDragAction() == DnDConstants.ACTION_COPY) {
-            cursor = DragSource.DefaultCopyDrop;
-        }
-        event.startDrag(cursor, new TransferableColor(color));
-    }
+    
 }

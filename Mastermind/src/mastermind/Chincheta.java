@@ -30,7 +30,6 @@ public class Chincheta extends JComponent implements MouseListener {
     // constructor de chinchetas del tablero
     public Chincheta(ModeloJuego m) {
         modelo = m;
-        
         this.addMouseListener(this);
 
         currColor = 0;
@@ -189,10 +188,10 @@ public class Chincheta extends JComponent implements MouseListener {
         public void drop(DropTargetDropEvent event) {
             try {
                 Transferable tr = event.getTransferable();
-                Color color = (Color) tr.getTransferData(TransferableColor.getColorFlavor());
+                int color = (Integer) tr.getTransferData(TransferableColor.getColorFlavor());
                 if(event.isDataFlavorSupported(TransferableColor.getColorFlavor())) {
                     event.acceptDrop(DnDConstants.ACTION_COPY);
-                    chincheta.setBackground(color);
+                    chincheta.setCurrColor(color);
                     event.dropComplete(true);
                     return;
                 }

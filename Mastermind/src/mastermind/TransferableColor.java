@@ -11,11 +11,11 @@ import java.awt.datatransfer.UnsupportedFlavorException;
  */
 public class TransferableColor implements Transferable {
     
-    private static DataFlavor colorFlavor = new DataFlavor(Color.class,"Un objeto de color");
+    private static DataFlavor colorFlavor = new DataFlavor(Integer.class,"Un numero");
     private static DataFlavor[] supportedFlavors = { colorFlavor, DataFlavor.stringFlavor };
-    Color color;
+    private Integer color;
     
-    public TransferableColor(Color color) {
+    public TransferableColor(int color) {
         this.color = color;
     }
     
