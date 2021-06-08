@@ -1,0 +1,10 @@
+Ismael/00 : 00 : 10
+Luis/00 : 00 : 11
+Juan/00 : 00 : 14
+Victor/00 : 00 : 14
+Felipe/00 : 00 : 15
+Nofalles/00 : 00 : 16
+Jorge/00 : 00 : 17
+Jorge/00 : 00 : 19
+Alejandro/00 : 00 : 20
+Mario/00 : 00 : 21
