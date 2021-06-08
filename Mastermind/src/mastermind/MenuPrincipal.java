@@ -61,6 +61,7 @@ public class MenuPrincipal extends Ventana {
         resultados.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 Resultados r = new Resultados(modelo);
+                modelo.addObserver(r);
                 r.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent e) {
                         rehabilitar();

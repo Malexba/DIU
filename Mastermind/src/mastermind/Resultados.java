@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mastermind;
 
 import java.awt.BorderLayout;
@@ -27,7 +22,7 @@ import static mastermind.Ventana.w;
  * Muestra un top con los resultados guardados de la dificultad actual.
  * @author Grupo 5
  */
-public class Resultados extends JFrame implements Observer {
+public class Resultados extends Ventana implements Observer {
     
     private ModeloJuego modelo;
     
@@ -40,6 +35,20 @@ public class Resultados extends JFrame implements Observer {
         super();
         modelo = m;
         setLayout(new BorderLayout());
+        // Tabla de resultados
+        JPanel resultados = new JPanel(new GridLayout(11,3));
+        resultados.add(letraBien(new JLabel("Puesto")));
+        resultados.add(letraBien(new JLabel("Nombre")));
+        resultados.add(letraBien(new JLabel("Tiempo")));
+        modelo.importar(modelo.getTamano(),nombre,tiempo);
+        for (int i=0;i<10;i++) { // Creamos tabla sin resultados
+            resultados.add(letraBien(new JLabel(i+1 + ".")));
+            Jnombre[i] = letraBien(new JLabel(nombre[i]));
+            resultados.add(Jnombre[i]);
+            Jtiempo[i] = letraBien(new JLabel(tiempo[i]));
+            resultados.add(Jtiempo[i]);
+        }
+        add(resultados,BorderLayout.CENTER);
         // Selector de dificulad (es un controlador)
         JPanel dificultad = new JPanel(new FlowLayout());
         JLabel nombreD = new JLabel("Dificultad:");
@@ -47,6 +56,16 @@ public class Resultados extends JFrame implements Observer {
         String[] dificultadesList = {"Fácil","Normal","Difícil"};
         SpinnerListModel spinner = new SpinnerListModel(dificultadesList);
         JSpinner dificultades = new JSpinner(spinner);
+        ((JSpinner.DefaultEditor) dificultades.getEditor()).getTextField().setEditable(false);
+        int difActual;
+        if ( modelo.getTamano() == 4 ) {
+            difActual = 0;
+        } else if ( modelo.getTamano() == 8) {
+            difActual = 2;
+        } else {
+            difActual = 1;
+        }
+        dificultades.setValue(dificultadesList[difActual]);
         dificultades.addChangeListener(new ChangeListener() { 
             public void stateChanged(ChangeEvent e) {
                 if (dificultades.getValue() == "Fácil") {
@@ -58,36 +77,13 @@ public class Resultados extends JFrame implements Observer {
                 }
             }
         });
-        ((JSpinner.DefaultEditor) dificultades.getEditor()).getTextField().setEditable(false);
-        int difActual;
-        if ( modelo.getTamano() == 4 ) {
-            difActual = 0;
-        } else if ( modelo.getTamano() == 8) {
-            difActual = 2;
-        } else {
-            difActual = 1;
-        }
-        dificultades.setValue(dificultadesList[difActual]);
         dificultad.add(dificultades);
         add(dificultad,BorderLayout.SOUTH);
-        // Tabla de resultados
-        JPanel resultados = new JPanel(new GridLayout(11,3));
-        resultados.add(letraBien(new JLabel("Puesto")));
-        resultados.add(letraBien(new JLabel("Nombre")));
-        resultados.add(letraBien(new JLabel("Tiempo")));
-        for (int i=0;i<10;i++) { // Creamos tabla sin resultados
-            resultados.add(letraBien(new JLabel(i+1 + ".")));
-            Jnombre[i] = letraBien(new JLabel());
-            resultados.add(Jnombre[i]);
-            Jtiempo[i] = letraBien(new JLabel());
-            resultados.add(Jtiempo[i]);
-        }
-        modelo.importar(modelo.getTamano(),nombre,tiempo); // Importamos resultados (etiquetas las actualiza update)
-        add(resultados,BorderLayout.CENTER);
         // Configuracion de la ventana
         setTitle("Resultados");
         pack();
         setResizable(false);
+        setSize(w/3,h/2);
         setLocationRelativeTo(null);
         setVisible(true);
     }

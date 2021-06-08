@@ -57,7 +57,7 @@ public class VistaJuego extends JPanel implements Observer {
         for (int i = 0; i < 4; i++) {
             clave[i] = new Chincheta(modelo, modelo.claveI(i));
             clave[i].setVis(false);
-            System.out.print(clave[i].getCurrColor());
+            //System.out.print(clave[i].getCurrColor());
             codigo.add(clave[i]);
         }
         add(codigo,BorderLayout.NORTH);

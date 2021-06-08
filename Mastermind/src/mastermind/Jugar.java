@@ -16,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -139,8 +142,15 @@ public class Jugar extends Ventana {
                     }
                     if (modelo.compruebaCombinacion(intento, pista[modelo.intentos()])) { // Jugador ha ganado la partida, guardamos su nombre
                         mReloj.parar();
-                        String inputValue = JOptionPane.showInputDialog("¡Felicidades, lo has descifrado!\nEscribe aquí el nombre por el\nque quieres que se te recuerde:");
-                        // GESTIÓN DE RESULTADOS
+                        String nombre = JOptionPane.showInputDialog("¡Felicidades, lo has descifrado!\nEscribe aquí el nombre por el\nque quieres que se te recuerde:");
+                        String tiempo = String.format("%02d", mReloj.horas()) + " : " + String.format("%02d", mReloj.minutos()) + " : " + String.format("%02d", mReloj.segundos());
+                        try {
+                            modelo.guardar(modelo.getTamano(),nombre,tiempo);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Jugar.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        cerrarSubventanas();
+                        cerrar();
                     } else { // Jugador ha perdido un intento, comprobamos que no haya perdido la partida; permitimos edición de siguiente intento
                         if (modelo.intentos() < 0) { // Jugador se ha quedado sin intentos
                             mReloj.parar();

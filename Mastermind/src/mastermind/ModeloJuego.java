@@ -1,8 +1,11 @@
 package mastermind;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.StringTokenizer;
 
 /**
  * Modelo del juego.
@@ -104,14 +107,69 @@ public class ModeloJuego extends Observable {
         return descifrado;
     }
     
-    public void importar(int d, String nombre[], String tiempo[]) { // Importación de resultados
+    public void guardar(int d, String nombre, String tiempo) throws FileNotFoundException { // Guarda resultados de la partida actual
+        String nombres[] = new String[10], tiempos[] = new String[10], aux;
+        int tam = importar(d,nombres,tiempos);
+        boolean incompleto = false;
+        if (tam < 10) { // Menos de diez resultados, añadimos uno nuevo; si no, solo sustituimos
+            incompleto = true;
+            tam++;
+        }
+        for ( int i=0; i<tam; i++) { // Ordenamos nombres y tiempos
+            if ( tiempo.compareTo(tiempos[i]) <= 0 ) { // Resultado actual mejor o igual que el de la posición i-ésima (tiempo menor)
+                // Nombres
+                aux = nombres[i];
+                nombres[i] = nombre;
+                nombre = aux;
+                // Tiempos
+                aux = tiempos[i];
+                tiempos[i] = tiempo;
+                tiempo = aux;
+            }
+        }
+        if (incompleto) { // Añadimos uno nuevo
+            nombres[tam-1] = nombre;
+            tiempos[tam-1] = tiempo;
+        }
+        String archivo; // Guardamos resultados en archivo txt
         if ( d == 4 ) {
-            ArrayList<String> datos = MyInput.leeFichero( "Facil.txt" );
+            archivo = "Facil.txt";
         } else if ( d == 6) {
-            ArrayList<String> datos = MyInput.leeFichero( "Normal.txt" );
+            archivo = "Normal.txt";
         } else {
-            ArrayList<String> datos = MyInput.leeFichero( "Dificil.txt" );
+            archivo = "Dificil.txt";
+        }
+        PrintWriter writer = new PrintWriter(archivo);
+        for ( int j = 0; j < tam; j++ ) {
+            writer.println(nombres[j]+"/"+tiempos[j]);
+        }
+        writer.close();
+    }
+    
+    
+    
+    public int importar(int d, String nombre[], String tiempo[]) { // Importación de resultados
+        ArrayList<String> datos;
+        if ( d == 4 ) {
+            datos = MyInput.leeFichero( "Facil.txt" );
+        } else if ( d == 6) {
+            datos = MyInput.leeFichero( "Normal.txt" );
+        } else {
+            datos = MyInput.leeFichero( "Dificil.txt" );
+        }
+        int tam = datos.size();
+        StringTokenizer tokenizer = null;
+        for ( int i=0; i<10; i++ ) {
+            if (i < tam ) { // Lee líneas del fichero
+                tokenizer = new StringTokenizer( datos.get(i), "/" );
+                nombre[i] = tokenizer.nextToken();
+                tiempo[i] = tokenizer.nextToken();
+            } else {
+                nombre[i] = "";
+                tiempo[i] = "";
+            }
         }
         actualizar();
+        return tam;
     }
 }

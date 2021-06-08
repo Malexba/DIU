@@ -80,7 +80,6 @@ public class ChinCombinacion extends JComponent {
         } else {
             g.fillOval(x,y,30,30);//
         }
-        
     }
 
     public int getColorActual() {
