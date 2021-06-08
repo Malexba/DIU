@@ -1,0 +1,48 @@
+/**
+     * Método que permite consultar los datos de una asignatura.
+     * Se pide al usuario el código de la materia y se comprueba si éste es
+     * válido. En caso afirmativo, se muestra la información por pantalla.
+     * Por último, el usuario decide si repetir o no la operación.
+     * @param datos ArrayList con los datos de las asignaturas
+     */
+    public static void cAsignatura ( ArrayList<String> datos ) {
+        int tam = datos.size();
+        String codTemp = "0000";
+        boolean existe = false;
+        StringTokenizer tokenizer = null;
+        String res = "S";
+        System.out.println( "CONSULTAR ASIGNATURA" );
+        System.out.println();
+        System.out.println( "Bienvenido al sistema de consulta de asignaturas." );
+        do {
+            System.out.println( "Aporte el codigo de la asignatura: " );
+            String cod = MyInput.readString();
+            int i = 0;
+            while ( i < tam ) { // Lee líneas del fichero
+                tokenizer = new StringTokenizer( datos.get(i), "/" );
+                codTemp = tokenizer.nextToken();
+                if ( cod.equals(codTemp) ) {
+                    existe = true;
+                    break;
+                }
+                i++;
+            }
+            if ( existe ) {
+                System.out.print( "\n" + codTemp + " " );
+                for ( int j = 0; j < 3; j++ ) {
+                    codTemp = tokenizer.nextToken();
+                    System.out.print( codTemp + " " );
+                }
+            } else {
+                System.out.println( "Aporte un codigo de asignatura valido." );
+            }
+            System.out.println();
+            System.out.println( "¿Desea ver los datos de otra asignatura? ( Marque S para si; N para no )" );
+            res = MyInput.readString();
+            while ( ( res.equals("S") == false ) && ( res.equals("N") == false ) ) {
+                System.out.println( "Introduzca una respuesta apropiada." );
+                System.out.println( "¿Desea ver los datos de otra asignatura?" );
+                res = MyInput.readString();
+            }
+        } while ( res.equals("S") );
+    }
