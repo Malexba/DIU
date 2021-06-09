@@ -22,6 +22,7 @@ public class ChinCombinacion extends JComponent {
     private boolean editable;
     private boolean visible;
     private Color color;
+    private String sColor;
     private int x,y;
 
     public ChinCombinacion(int x, int y, Color color) {
@@ -57,6 +58,38 @@ public class ChinCombinacion extends JComponent {
         colors[7] = Color.MAGENTA;
         colors[8] = Color.ORANGE;
     }
+    
+    public void textoTooltip(int c) {
+        switch (c) {
+            case 1:
+                sColor = "Rojo";
+                break;
+            case 2:
+                sColor = "Cian";
+                break;
+            case 3:
+                sColor = "Verde";
+                break;
+            case 4:
+                sColor = "Amarillo";
+                break;
+            case 5:
+                sColor = "Rosa";
+                break;
+            case 6:
+                sColor = "Azul";
+                break;
+            case 7:
+                sColor = "Magenta";
+                break;
+            case 8:
+                sColor = "Naranja";
+                break;
+            default:
+                sColor = "";
+                break;
+        }
+    }
 
     // redraw button
     public void paintComponent(Graphics g) {
@@ -88,6 +121,8 @@ public class ChinCombinacion extends JComponent {
     
 
     public void setColorActual(int nuevoColor) {
+        textoTooltip(nuevoColor);
+        setToolTipText(sColor);
         if (editable)
            colorActual = nuevoColor;
         repaint();

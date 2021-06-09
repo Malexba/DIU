@@ -15,19 +15,38 @@ import javax.swing.JComponent;
 public class ChinchetaPista extends JComponent {
     
     private int  currColor;
+    private String color;
 
     // constructor
     public ChinchetaPista() {
         currColor = 0;
+        color = "";
+        setToolTipText(color);
     }
     
     // Constructor para instrucciones
     public ChinchetaPista(int c) {
         currColor = c;
+        textoTooltip(c);
+    }
+    
+    public void textoTooltip(int c) {
+        switch (c) {
+            case 1:
+                color = "Blanco";
+                break;
+            case 2:
+                color = "Negro";
+                break;
+            default:
+                color = "";
+                break;
+        }
     }
 
     // Dibujo de la chincheta
     public void paint(Graphics g) {
+        setToolTipText(color);
         switch (currColor) {
             case 1:
                 g.setColor(Color.WHITE);
@@ -51,6 +70,7 @@ public class ChinchetaPista extends JComponent {
 
     // Cambiar color actual
     public void setCurrColor(int newColor) {
+        textoTooltip(newColor);
         currColor = newColor;
     }
 

@@ -45,6 +45,7 @@ public class Instrucciones extends Ventana {
                 if (!siguiente.isEnabled()) {
                     siguiente.setEnabled(true);
                 }
+                sonidoBoton();
             }
         });
         siguiente = new JButton("Siguiente");
@@ -58,6 +59,7 @@ public class Instrucciones extends Ventana {
                 if (!anterior.isEnabled()) {
                     anterior.setEnabled(true);
                 }
+                sonidoBoton();
             }
         });
         panelBotones = new JPanel(new FlowLayout());

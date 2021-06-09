@@ -22,6 +22,7 @@ public class Chincheta extends JComponent implements MouseListener {
     
     private int currColor;
     private Color colores[]; // new Color(102,0,153); // Morado
+    private String sColor;
     private boolean mousePressed;
     private boolean editable; // Para poder editar el color al pulsar
     private boolean visible; // Para la clave a adivinar
@@ -33,6 +34,8 @@ public class Chincheta extends JComponent implements MouseListener {
         this.addMouseListener(this);
 
         currColor = 0;
+        sColor = "";
+        setToolTipText(sColor);
         mousePressed = false;
         editable = false;
         visible = true;
@@ -51,6 +54,8 @@ public class Chincheta extends JComponent implements MouseListener {
     // Constructor de chinchetas para ejemplos (instrucciones) y para la caja
     public Chincheta(int c) {
         currColor = c;
+        textoTooltip(c);
+        setToolTipText(sColor);
         tam = 50;
         
         mousePressed = false;
@@ -72,6 +77,8 @@ public class Chincheta extends JComponent implements MouseListener {
     public Chincheta(ModeloJuego m, int c) {
         modelo = m;
         currColor = c;
+        sColor = "?";
+        setToolTipText(sColor);
         
         mousePressed = false;
         editable = false;
@@ -86,6 +93,38 @@ public class Chincheta extends JComponent implements MouseListener {
         colores[6] = Color.BLUE;
         colores[7] = Color.MAGENTA;
         colores[8] = Color.ORANGE;
+    }
+    
+    public void textoTooltip(int c) {
+        switch (c) {
+            case 1:
+                sColor = "Rojo";
+                break;
+            case 2:
+                sColor = "Cian";
+                break;
+            case 3:
+                sColor = "Verde";
+                break;
+            case 4:
+                sColor = "Amarillo";
+                break;
+            case 5:
+                sColor = "Rosa";
+                break;
+            case 6:
+                sColor = "Azul";
+                break;
+            case 7:
+                sColor = "Magenta";
+                break;
+            case 8:
+                sColor = "Naranja";
+                break;
+            default:
+                sColor = "";
+                break;
+        }
     }
 
     // redraw button
@@ -102,6 +141,8 @@ public class Chincheta extends JComponent implements MouseListener {
         // if visible, show color change
         if (visible) {
             g.setColor(colores[currColor]);
+            textoTooltip(currColor);
+            setToolTipText(sColor);
         }
         // then redraw
         if (currColor == 0 || !visible) {

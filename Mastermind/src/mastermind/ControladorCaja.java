@@ -44,6 +44,7 @@ public class ControladorCaja extends JFrame implements DragGestureListener {
         }
         add(colorPanel);
         setTitle("Fichas");
+        setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(50*colors.length, 100);
         setLocation(25*w/6,50*w/6);

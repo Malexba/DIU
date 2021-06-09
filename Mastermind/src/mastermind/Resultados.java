@@ -75,6 +75,7 @@ public class Resultados extends Ventana implements Observer {
                 } else {
                     modelo.importar(8,nombre,tiempo);
                 }
+                sonidoBoton();
             }
         });
         dificultad.add(dificultades);

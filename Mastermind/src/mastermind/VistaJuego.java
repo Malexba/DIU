@@ -61,7 +61,7 @@ public class VistaJuego extends JPanel implements Observer {
         for (int i = 0; i < 4; i++) {
             clave[i] = new Chincheta(modelo, modelo.claveI(i));
             clave[i].setVis(false);
-            //System.out.println(clave[i].getCurrColor());
+            System.out.println(clave[i].getCurrColor());
             codigo.add(clave[i]);
         }
         add(codigo,BorderLayout.NORTH);
@@ -79,7 +79,7 @@ public class VistaJuego extends JPanel implements Observer {
             for (int i = 0; i < 4; i++) {
                 clave[i].setColor(modelo.claveI(i));
                 clave[i].setVis(false);
-                //System.out.println(clave[i].getCurrColor());
+                System.out.println(clave[i].getCurrColor());
             }
             for (int i=0; i<10; i++) {
                 for (int j=0; j<4; j++) {
