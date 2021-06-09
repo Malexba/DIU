@@ -156,7 +156,7 @@ public class Jugar extends Ventana {
                             mReloj.parar();
                             ans = JOptionPane.showConfirmDialog(null,"¡Casi lo tenías!\n¿Quieres jugar otra vez?", "Derrota", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
                             if ( ans == 0 ) { // Reiniciamos código para adivinar
-                                modelo.generaClave();
+                                modelo.reiniciar();
                                 mReloj.resetear();
                             } else if (ans == 1) { // Cerramos pestaña juego
                                 cerrarSubventanas();

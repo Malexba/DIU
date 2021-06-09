@@ -53,6 +53,7 @@ public class ModeloReloj extends Observable {
     
     public void resetear() {
         startTime = System.currentTimeMillis();
+        t.start();
     }
     
     private void actualizar() {

@@ -20,6 +20,8 @@ public class VistaJuego extends JPanel implements Observer {
     ModeloJuego modelo;
     
     private Chincheta clave[] = new Chincheta[4];
+    private Chincheta combinacion[][] = new Chincheta[10][4];
+    private ChinchetaPista pista[][] = new ChinchetaPista[10][4];
     
     public VistaJuego(ModeloJuego m, Chincheta combinacion[][], ChinchetaPista pista[][]) {
         super();
@@ -48,6 +50,8 @@ public class VistaJuego extends JPanel implements Observer {
         for (int j=0; j<4; j++) {
             combinacion[9][j].setEdit(true);
         }
+        this.combinacion = combinacion;
+        this.pista = pista;
         setLayout(new BorderLayout());
         setBackground(new Color(165,100,32)); // Marrón
         // Mostramos la clave a adivinar (tapada)
@@ -57,7 +61,7 @@ public class VistaJuego extends JPanel implements Observer {
         for (int i = 0; i < 4; i++) {
             clave[i] = new Chincheta(modelo, modelo.claveI(i));
             clave[i].setVis(false);
-            //System.out.print(clave[i].getCurrColor());
+            //System.out.println(clave[i].getCurrColor());
             codigo.add(clave[i]);
         }
         add(codigo,BorderLayout.NORTH);
@@ -69,6 +73,23 @@ public class VistaJuego extends JPanel implements Observer {
         if (modelo.descifrado() || modelo.intentos() < 0) { // Mostramos el código si el usuario ha ganado
             for (int i = 0; i < 4; i++) {
                 clave[i].setVis(true);
+            }
+        }
+        if (modelo.reiniciado()) { // Reinicio del juego si se ha perdido
+            for (int i = 0; i < 4; i++) {
+                clave[i].setColor(modelo.claveI(i));
+                clave[i].setVis(false);
+                //System.out.println(clave[i].getCurrColor());
+            }
+            for (int i=0; i<10; i++) {
+                for (int j=0; j<4; j++) {
+                    pista[i][j].setCurrColor(0);
+                    combinacion[i][j].setColor(0);
+                    combinacion[i][j].setEdit(false);
+                }
+            }
+            for (int j=0; j<4; j++) {
+                combinacion[9][j].setEdit(true);
             }
         }
         repaint();

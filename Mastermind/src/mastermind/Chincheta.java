@@ -120,6 +120,11 @@ public class Chincheta extends JComponent implements MouseListener {
     public Color getColor() {
         return colores[currColor];
     }
+    
+    // Cambiar color (para reinicio)
+    public void setColor(int newColor) {
+        currColor = newColor;
+    }
 
     // Cambiar color y actualizar
     public void setCurrColor(int newColor) {

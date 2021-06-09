@@ -19,10 +19,11 @@ public class ModeloJuego extends Observable {
     private int[] pista; //
     private int[] clave = new int[4];
     private int contador; // Nº de intentos (9 - contador es la fila en el tablero)
-    private boolean descifrado;
+    private boolean descifrado, reinicio;
     
     public ModeloJuego() {
         pista = new int[dificultad];
+        reinicio = false;
         generaClave();
     }
     
@@ -34,6 +35,17 @@ public class ModeloJuego extends Observable {
         }
         descifrado = false;
         contador = 9;
+    }
+    
+    public void reiniciar() {
+        generaClave();
+        reinicio = true;
+        actualizar();
+        reinicio = false;
+    }
+    
+    public boolean reiniciado() {
+        return reinicio;
     }
     
     public int intentos() {
